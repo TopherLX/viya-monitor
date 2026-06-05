@@ -4,13 +4,13 @@ CREATE TABLE IF NOT EXISTS cd_dws.viya_server_usage_local ON CLUSTER clickhouse_
 (
     hostname       Nullable(String),
     host_ip        Nullable(String),
-    collected_at   Nullable(DateTime),
+    parent_device  Nullable(String),
     device_name    Nullable(String),
     device_type    Nullable(String),
-    size_bytes     Nullable(UInt64),
     mountpoint     Nullable(String),
+    size_bytes     Nullable(UInt64),
     fsuse_pct      Nullable(Float32),
-    parent_device  Nullable(String)
+    collected_at   Nullable(DateTime)
 )
 ENGINE = ReplicatedReplacingMergeTree
 PARTITION BY toYYYYMM(collected_at)

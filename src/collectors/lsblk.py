@@ -33,6 +33,8 @@ def parse_pct(raw: str | None) -> float | None:
 
 
 def _flatten(node: dict[str, Any], parent: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    if node.get("type") == "loop":
+        return []
     rows: list[dict[str, Any]] = []
     rows.append({
         "device_name": node["name"],

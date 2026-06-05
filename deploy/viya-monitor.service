@@ -1,0 +1,11 @@
+[Unit]
+Description=Viya Monitor - Storage metrics collector
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/viya-monitor
+ExecStart=/opt/viya-monitor/.venv/bin/python -m src.main /opt/viya-monitor/config.yaml
+StandardOutput=journal
+StandardError=journal

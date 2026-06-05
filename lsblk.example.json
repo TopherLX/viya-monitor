@@ -1,0 +1,101 @@
+{
+    "blockdevices": [
+        {
+            "name": "/dev/loop0",
+            "type": "loop",
+            "size": "49.3M",
+            "mountpoint": "/snap/snapd/26865",
+            "fsuse%": "100%"
+        },
+        {
+            "name": "/dev/loop1",
+            "type": "loop",
+            "size": "63.8M",
+            "mountpoint": "/snap/core20/2769",
+            "fsuse%": "100%"
+        },
+        {
+            "name": "/dev/loop2",
+            "type": "loop",
+            "size": "91.7M",
+            "mountpoint": "/snap/lxd/38469",
+            "fsuse%": "100%"
+        },
+        {
+            "name": "/dev/loop3",
+            "type": "loop",
+            "size": "48.4M",
+            "mountpoint": "/snap/snapd/26382",
+            "fsuse%": "100%"
+        },
+        {
+            "name": "/dev/loop4",
+            "type": "loop",
+            "size": "91.7M",
+            "mountpoint": "/snap/lxd/38800",
+            "fsuse%": "100%"
+        },
+        {
+            "name": "/dev/loop5",
+            "type": "loop",
+            "size": "63.8M",
+            "mountpoint": "/snap/core20/2866",
+            "fsuse%": "100%"
+        },
+        {
+            "name": "/dev/sda",
+            "type": "disk",
+            "size": "447.1G",
+            "mountpoint": null,
+            "fsuse%": null,
+            "children": [
+                {
+                    "name": "/dev/sda1",
+                    "type": "part",
+                    "size": "1G",
+                    "mountpoint": "/boot/efi",
+                    "fsuse%": "1%"
+                },
+                {
+                    "name": "/dev/sda2",
+                    "type": "part",
+                    "size": "2G",
+                    "mountpoint": "/boot",
+                    "fsuse%": "13%"
+                },
+                {
+                    "name": "/dev/sda3",
+                    "type": "part",
+                    "size": "444G",
+                    "mountpoint": null,
+                    "fsuse%": null,
+                    "children": [
+                        {
+                            "name": "/dev/mapper/ubuntu--vg-ubuntu--lv",
+                            "type": "lvm",
+                            "size": "400G",
+                            "mountpoint": "/",
+                            "fsuse%": "43%"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "/dev/sdb",
+            "type": "disk",
+            "size": "1.7T",
+            "mountpoint": null,
+            "fsuse%": null,
+            "children": [
+                {
+                    "name": "/dev/mapper/tmpdatavg-tmpdatalv",
+                    "type": "lvm",
+                    "size": "1T",
+                    "mountpoint": "/saswork",
+                    "fsuse%": "1%"
+                }
+            ]
+        }
+    ]
+}

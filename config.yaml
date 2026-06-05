@@ -1,0 +1,6 @@
+clickhouse:
+  host: "10.24.50.13"
+  port: 8123
+  user: "cd_admin"
+  password: "${CH_PASSWORD}"
+  database: "cd_dws"

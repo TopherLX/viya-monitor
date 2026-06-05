@@ -47,7 +47,7 @@ src/collectors/
 
 ## 部署
 
-- 服务器时区为 UTC+0，timer 设 `OnCalendar=16:00`（北京时间 00:00）
+- 服务器时区为 UTC+0，timer 设 `OnCalendar=hourly` 每小时触发一次
 - ClickHouse 集群时区为 UTC+8，`collected_at` 直接生成 UTC+8 本地时间（ClickHouse 23.10 不支持 `+00:00` 后缀）
 - `host_ip` 过滤 `172.17.12.*` 网段，排除 Docker/VPN 的额外 IP
 - `RandomizedDelaySec=300` 避免 3 台同时发送

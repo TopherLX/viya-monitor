@@ -1,9 +1,9 @@
 [Unit]
-Description=Viya Monitor daily trigger
+Description=Viya Monitor hourly trigger
 Requires=viya-monitor.service
 
 [Timer]
-OnCalendar=16:00
+OnCalendar=hourly
 RandomizedDelaySec=300
 Persistent=true
 

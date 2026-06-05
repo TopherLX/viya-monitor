@@ -24,7 +24,7 @@ class Config:
         else:
             self.clickhouse_password = pwd
         self.clickhouse_database: str = raw["clickhouse"].get("database", "cd_temp")
-        self.hostname: str = _sh("hostname")
+        self.host_name: str = _sh("hostname")
         ips = _sh("hostname", "-I").split()
         self.host_ip: str = next((ip for ip in ips if ip.startswith("172.17.12.")), "")
 

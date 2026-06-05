@@ -16,7 +16,7 @@ class ClickHouseClient:
         self._base_url = f"http://{config.clickhouse_host}:{config.clickhouse_port}"
         self._auth = (config.clickhouse_user, config.clickhouse_password)
         self._database = config.clickhouse_database
-        self._hostname = config.hostname
+        self._host_name = config.host_name
         self._host_ip = config.host_ip
         self._client = httpx.Client(timeout=30)
 
@@ -26,7 +26,7 @@ class ClickHouseClient:
             return 0
         now = datetime.now(_CH_TZ).strftime("%Y-%m-%d %H:%M:%S")
         for row in result.rows:
-            row.setdefault("hostname", self._hostname)
+            row.setdefault("host_name", self._host_name)
             row.setdefault("host_ip", self._host_ip)
             row.setdefault("collected_at", now)
         lines = "\n".join(json.dumps(row, ensure_ascii=False) for row in result.rows)

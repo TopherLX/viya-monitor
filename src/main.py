@@ -17,7 +17,7 @@ def main() -> None:
 
     config_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("config.yaml")
     config = Config(config_path)
-    logger.info("host=%s ip=%s", config.hostname, config.host_ip)
+    logger.info("host=%s ip=%s", config.host_name, config.host_ip)
 
     collectors = [LsblkCollector()]
     client = ClickHouseClient(config)

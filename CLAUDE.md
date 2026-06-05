@@ -53,6 +53,18 @@ src/collectors/
 - `RandomizedDelaySec=300` 避免 3 台同时发送
 - 密码通过 `EnvironmentFile=/etc/viya-monitor.env` 注入 systemd，不写入仓库
 
+### 服务器更新流程
+
+```bash
+cd /opt/viya-monitor && git pull
+# 仅当 deploy/viya-monitor.service 或 .timer 有变更时才需要：
+cp deploy/viya-monitor.service /etc/systemd/system/ && cp deploy/viya-monitor.timer /etc/systemd/system/ && systemctl daemon-reload
+# 验证
+systemctl start viya-monitor.service && journalctl -u viya-monitor.service --no-pager -n 5
+```
+
+仅源码变更时只需 `git pull`，无需 `daemon-reload`。timer 下次触发自动使用最新代码。
+
 ## 已知待改进
 
 - 单个 collector 失败会中断后续 collector 的执行。添加第二个 collector 时需在 main.py 的 for 循环内做错误隔离。详见 memory。

@@ -29,6 +29,23 @@ systemctl enable --now viya-monitor.timer
 systemctl status viya-monitor.timer
 ```
 
+## 更新
+
+```bash
+cd /opt/viya-monitor
+git pull
+uv sync                       # 仅依赖变更时需要
+
+# 如果 deploy/viya-monitor.service 或 .timer 有变更：
+cp deploy/viya-monitor.service /etc/systemd/system/
+cp deploy/viya-monitor.timer /etc/systemd/system/
+systemctl daemon-reload        # 重新加载 systemd 配置，不影响运行中的服务
+
+# 验证
+systemctl start viya-monitor.service
+journalctl -u viya-monitor.service --no-pager -n 5
+```
+
 ## 日志
 
 ```bash

@@ -43,14 +43,15 @@ src/collectors/
 
 - `parse_size("447.1G")` → 字节数（1024 进制，支持 K/M/G/T/P）
 - `parse_pct("43%")` → 浮点数 43.0
-- `_flatten()` 将 lsblk JSON 树拍平，`parent_device` 保留父子关系
+- `_flatten()` 将 lsblk JSON 树拍平，过滤 `type="loop"` 设备，`parent_device` 保留父子关系
 
 ## 部署
 
 - 服务器时区为 UTC+0，timer 设 `OnCalendar=16:00`（北京时间 00:00）
-- ClickHouse 集群时区为 UTC+8，`collected_at` 带 `+00:00` 后缀以明确 UTC
+- ClickHouse 集群时区为 UTC+8，`collected_at` 直接生成 UTC+8 本地时间（ClickHouse 23.10 不支持 `+00:00` 后缀）
 - `host_ip` 过滤 `172.17.12.*` 网段，排除 Docker/VPN 的额外 IP
 - `RandomizedDelaySec=300` 避免 3 台同时发送
+- 密码通过 `EnvironmentFile=/etc/viya-monitor.env` 注入 systemd，不写入仓库
 
 ## 已知待改进
 

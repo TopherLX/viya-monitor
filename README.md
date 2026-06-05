@@ -12,10 +12,11 @@ cd /opt/viya-monitor
 # 2. 安装依赖（需先安装 uv: curl -LsSf https://astral.sh/uv/install.sh | sh）
 uv sync
 
-# 3. 设置 ClickHouse 密码
-export CH_PASSWORD='your-password'
+# 3. 创建密码文件
+echo 'CH_PASSWORD=your-password' > /etc/viya-monitor.env
 
 # 4. 手工执行验证
+export CH_PASSWORD='your-password'
 uv run python -m src.main config.yaml
 
 # 5. 安装 systemd timer（北京时间 00:00 触发）

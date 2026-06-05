@@ -19,7 +19,7 @@ uv run ruff format src/        # 格式化
 
 ```
 src/main.py          → 入口：读配置 → 遍历 collector → 采集 → 写入 ClickHouse
-src/config.py        → 加载 config.yaml，自动探测 hostname/IP
+src/config.py        → 加载 config.yaml，自动探测 host_name/IP
 src/client.py        → ClickHouse HTTP 客户端（JSONEachRow 格式，含重试）
 src/collectors/
   base.py            → CollectResult 数据容器（table_name + rows）
@@ -30,7 +30,7 @@ src/collectors/
 
 1. `Config` 加载 `config.yaml`，通过 `hostname` 和 `hostname -I` 自动获取主机标识
 2. `main.py` 遍历 collector 列表，每个 collector 返回 `CollectResult(table_name, rows)`
-3. `ClickHouseClient.insert()` 给每行注入 `hostname`、`host_ip`、`collected_at`，POST 到 ClickHouse
+3. `ClickHouseClient.insert()` 给每行注入 `host_name`、`host_ip`、`collected_at`，POST 到 ClickHouse
 
 ### ClickHouse 表命名约定
 

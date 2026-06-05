@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS cd_dws.viya_server_usage_local on cluster clickhouse_cluster sync;
+DROP TABLE IF EXISTS cd_dws.viya_server_usage_local ON CLUSTER clickhouse_cluster SYNC;
 
-CREATE TABLE IF NOT EXISTS cd_dws.viya_server_usage_local on cluster clickhouse_cluster
+CREATE TABLE IF NOT EXISTS cd_dws.viya_server_usage_local ON CLUSTER clickhouse_cluster
 (
     hostname       Nullable(String),
     host_ip        Nullable(String),
@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS cd_dws.viya_server_usage_local on cluster clickhouse_
     fsuse_pct      Nullable(Float32),
     parent_device  Nullable(String)
 )
-ENGINE = ReplicatedMergeTree
-ORDER BY (hostname, device_name, collected_at)
-SETTINGS allow_nullable_key = 1
+ENGINE = ReplicatedReplacingMergeTree
+PARTITION BY toYYYYMM(collected_at)
+ORDER BY (hostname, device_name, toYYYYMMDD(collected_at))
+SETTINGS allow_nullable_key = 1, min_age_to_force_merge_seconds = 21600, min_age_to_force_merge_on_partition_only = 1
 COMMENT 'Viya服务器存储信息，命令：lsblk -J -p -o NAME,TYPE,SIZE,MOUNTPOINT,FSUSE%';

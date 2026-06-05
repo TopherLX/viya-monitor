@@ -5,12 +5,11 @@ from datetime import datetime, timedelta, timezone
 
 import httpx
 
-_CH_TZ = timezone(timedelta(hours=8))
 from src.collectors.base import CollectResult
 from src.config import Config
 
 logger = logging.getLogger("viya-monitor")
-
+_CH_TZ = timezone(timedelta(hours=8))
 
 class ClickHouseClient:
     def __init__(self, config: Config):

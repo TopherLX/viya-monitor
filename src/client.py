@@ -1,8 +1,11 @@
 import json
 import logging
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+
 import httpx
+
+_CH_TZ = timezone(timedelta(hours=8))
 from src.collectors.base import CollectResult
 from src.config import Config
 
@@ -22,7 +25,7 @@ class ClickHouseClient:
         """写入 ClickHouse，返回写入行数。"""
         if not result.rows:
             return 0
-        now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S") + "+00:00"
+        now = datetime.now(_CH_TZ).strftime("%Y-%m-%d %H:%M:%S")
         for row in result.rows:
             row.setdefault("hostname", self._hostname)
             row.setdefault("host_ip", self._host_ip)

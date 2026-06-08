@@ -62,7 +62,7 @@ src/collectors/
 - `host_ip` 过滤 `172.17.12.*` 网段，排除 Docker/VPN 的额外 IP
 - `RandomizedDelaySec=300` 避免 3 台同时发送
 - 密码通过 `EnvironmentFile=/etc/viya-monitor.env` 注入 systemd，不写入仓库
-- `viya-export` 仅在 worker1 上部署，每天 12:10 和 23:10 导出数据到 dashboard 仓库
+- `viya-export` 仅在 worker1 上部署，每天 12:10 和 23:10（北京时间）导出数据到 dashboard 仓库
 
 ### 采集服务器更新流程
 

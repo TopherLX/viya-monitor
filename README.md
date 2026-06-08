@@ -46,6 +46,37 @@ systemctl start viya-monitor.service
 journalctl -u viya-monitor.service --no-pager -n 5
 ```
 
+## 导出（仅 worker1）
+
+将 ClickHouse 数据导出到 [viya-monitor-dashboard](https://github.com/TopherLX/viya-monitor-dashboard)，供 GitHub Pages 部署。
+
+### 首次部署
+
+```bash
+# 1. 克隆 dashboard 仓库
+git clone git@github.com:TopherLX/viya-monitor-dashboard.git /opt/viya-monitor-dashboard
+
+# 2. 安装 timer（每天 12:10 和 23:10 触发）
+cp deploy/viya-export.service /etc/systemd/system/
+cp deploy/viya-export.timer /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable --now viya-export.timer
+
+# 3. 验证
+systemctl start viya-export.service
+journalctl -u viya-export.service --no-pager -n 10
+```
+
+### 更新
+
+```bash
+cd /opt/viya-monitor && git pull
+# 如果 deploy/viya-export.service 或 .timer 有变更：
+cp deploy/viya-export.service /etc/systemd/system/
+cp deploy/viya-export.timer /etc/systemd/system/
+systemctl daemon-reload
+```
+
 ## 日志
 
 ```bash

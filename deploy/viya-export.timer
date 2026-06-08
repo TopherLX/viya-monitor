@@ -1,0 +1,12 @@
+[Unit]
+Description=Viya Monitor - Export timer (12:10 & 23:10 daily)
+Requires=viya-export.service
+
+[Timer]
+OnCalendar=*-*-* 12:10:00
+OnCalendar=*-*-* 23:10:00
+RandomizedDelaySec=120
+Persistent=true
+
+[Install]
+WantedBy=timers.target

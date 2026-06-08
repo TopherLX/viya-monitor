@@ -2,6 +2,7 @@ import json
 import logging
 import time
 from datetime import datetime, timedelta, timezone
+from typing import Any
 
 import httpx
 
@@ -47,6 +48,28 @@ class ClickHouseClient:
                 logger.warning("insert attempt %d/3 failed: %s", attempt, e)
                 time.sleep(5)
         return 0
+
+    def query(self, sql: str) -> list[dict[str, Any]]:
+        """执行 SELECT 查询，返回行列表。"""
+        url = f"{self._base_url}/"
+        params = {
+            "database": self._database,
+            "query": sql + " FORMAT JSONEachRow",
+        }
+        for attempt in range(1, 4):
+            try:
+                resp = self._client.post(url, params=params, auth=self._auth)
+                resp.raise_for_status()
+                lines = resp.text.strip()
+                if not lines:
+                    return []
+                return [json.loads(line) for line in lines.split("\n")]
+            except (httpx.HTTPError, json.JSONDecodeError) as e:
+                if attempt == 3:
+                    raise
+                logger.warning("query attempt %d/3 failed: %s", attempt, e)
+                time.sleep(5)
+        return []
 
     def close(self) -> None:
         self._client.close()

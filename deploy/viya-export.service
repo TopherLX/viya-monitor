@@ -1,0 +1,12 @@
+[Unit]
+Description=Viya Monitor - Export data for dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/viya-monitor
+EnvironmentFile=-/etc/viya-monitor.env
+ExecStart=/opt/viya-monitor/.venv/bin/python -m src.export /opt/viya-monitor/config.yaml
+StandardOutput=journal
+StandardError=journal

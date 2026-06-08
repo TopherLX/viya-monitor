@@ -49,8 +49,9 @@ def main() -> None:
         _git("pull", "origin", "main")
 
         existing = _load_existing()
-        max_ts = max((row["collected_at"] for row in existing), default=None)
-        logger.info("existing rows: %d, max collected_at: %s", len(existing), max_ts)
+        max_ts_full = max((row["collected_at"] for row in existing), default=None)
+        max_ts = max_ts_full[:13] if max_ts_full else None  # 截取到小时，匹配 ReplacingMergeTree 的 ORDER BY 粒度
+        logger.info("existing rows: %d, max collected_at: %s → %s", len(existing), max_ts_full, max_ts)
 
         if max_ts:
             sql = (

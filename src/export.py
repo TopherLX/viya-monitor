@@ -55,15 +55,19 @@ def main() -> None:
         if max_ts:
             sql = (
                 f"SELECT * FROM {config.clickhouse_database}.{TABLE}_all "
-                f"WHERE collected_at > '{max_ts}' "
+                f"WHERE collected_at >= '{max_ts}' "
                 f"ORDER BY collected_at"
             )
         else:
             sql = f"SELECT * FROM {config.clickhouse_database}.{TABLE}_all ORDER BY collected_at"
 
         logger.info("querying ClickHouse...")
-        new_rows = client.query(sql)
-        logger.info("got %d new rows", len(new_rows))
+        fetched = client.query(sql)
+        logger.info("got %d rows from CH", len(fetched))
+
+        existing_keys = {(r["host_name"], r["device_name"], r["collected_at"]) for r in existing}
+        new_rows = [r for r in fetched if (r["host_name"], r["device_name"], r["collected_at"]) not in existing_keys]
+        logger.info("new rows after dedup: %d", len(new_rows))
 
         if not new_rows:
             logger.info("no new data, skipping commit")

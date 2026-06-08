@@ -53,7 +53,7 @@ def main() -> None:
         max_ts_full = max((row["collected_at"] for row in existing), default=None)
         if max_ts_full:
             dt = datetime.strptime(max_ts_full[:13], "%Y-%m-%d %H")
-            dt -= timedelta(minutes=10)
+            dt += timedelta(minutes=10)
             max_ts = dt.strftime("%Y-%m-%d %H:%M:%S")
         else:
             max_ts = None

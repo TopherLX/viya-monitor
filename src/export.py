@@ -45,13 +45,14 @@ def main() -> None:
             )
             sys.exit(1)
 
-        logger.info("git pull dashboard repo")
+        logger.info("[1/4] git pull dashboard repo")
         _git("pull", "origin", "main")
 
         existing = _load_existing()
         max_ts_full = max((row["collected_at"] for row in existing), default=None)
-        max_ts = max_ts_full[:13] + ":00:00" if max_ts_full else None  # 截取到小时，匹配 ReplacingMergeTree 的 ORDER BY 粒度
-        logger.info("existing rows: %d, max collected_at: %s → %s", len(existing), max_ts_full, max_ts)
+        max_ts = max_ts_full[:13] + ":00:00" if max_ts_full else None
+        logger.info("[2/4] loaded %d existing rows, latest: %s, query since: %s",
+                     len(existing), max_ts_full, max_ts)
 
         if max_ts:
             sql = (
@@ -62,16 +63,17 @@ def main() -> None:
         else:
             sql = f"SELECT * FROM {config.clickhouse_database}.{TABLE}_all ORDER BY collected_at"
 
-        logger.info("querying ClickHouse...")
         fetched = client.query(sql)
-        logger.info("got %d rows from CH", len(fetched))
+        logger.info("[3/4] CH returned %d rows (since %s)", len(fetched), max_ts or "beginning")
 
         existing_keys = {(r["host_name"], r["device_name"], r["collected_at"]) for r in existing}
         new_rows = [r for r in fetched if (r["host_name"], r["device_name"], r["collected_at"]) not in existing_keys]
-        logger.info("new rows after dedup: %d", len(new_rows))
+        skipped = len(fetched) - len(new_rows)
+        if skipped:
+            logger.info("dedup: %d already in JSON, %d new", skipped, len(new_rows))
 
         if not new_rows:
-            logger.info("no new data, skipping commit")
+            logger.info("no new data to commit, done")
             return
 
         all_rows = existing + new_rows
@@ -81,7 +83,7 @@ def main() -> None:
             json.dumps(all_rows, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
-        logger.info("wrote %d rows to %s", len(all_rows), json_path)
+        logger.info("[4/4] wrote %d rows (+%d new) → git commit & push", len(all_rows), len(new_rows))
 
         if _git_quiet("diff", "--quiet", "--", REL_PATH):
             logger.info("no changes detected, skipping push")

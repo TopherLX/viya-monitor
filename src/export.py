@@ -3,6 +3,7 @@ import json
 import logging
 import subprocess
 import sys
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from src.client import ClickHouseClient
@@ -50,7 +51,12 @@ def main() -> None:
 
         existing = _load_existing()
         max_ts_full = max((row["collected_at"] for row in existing), default=None)
-        max_ts = max_ts_full[:13] + ":00:00" if max_ts_full else None
+        if max_ts_full:
+            dt = datetime.strptime(max_ts_full[:13], "%Y-%m-%d %H")
+            dt -= timedelta(minutes=10)
+            max_ts = dt.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            max_ts = None
         logger.info("[2/4] loaded %d existing rows, latest: %s, query since: %s",
                      len(existing), max_ts_full, max_ts)
 
